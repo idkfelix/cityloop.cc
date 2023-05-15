@@ -18,11 +18,11 @@ function ProductGallery({product}) {
   return (
     <>
       <div className="product-gallery">
-        <img src={selectedImage} className="focused-image" />
+        <img src={`${selectedImage}?width=600`} className="focused-image" />
         <div style={{ display: 'flex' }}>
           {product?.images?.map((image) => (
             <img 
-            src={image} 
+            src={`${image}?width=600`} 
             className={`image-pick ${image === selectedImage ? 'selected-image' : ''}`} 
             onClick={() => handleImageClick(image)}
             />

@@ -9,7 +9,7 @@ function Catalog() {
 
   useEffect(() => {
     const loadProducts = async () => {
-      const res = await axios.get("http://localhost:1337/api/catalog");
+      const res = await axios.get("http://10.0.0.25:1337/api/catalog");
       console.log(res);
       setProducts(res.data);
     }

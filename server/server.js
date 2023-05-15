@@ -1,73 +1,85 @@
 const express = require('express')
+const mongoose = require("mongoose");
+require('dotenv').config()
 const cors = require('cors')
+const sharp = require('sharp');
+const fs = require('fs');
+const path = require('path');
 const app = express()
+const Product = require('./dbModels/product.js');
 
 app.use(cors())
 
-products = [
-  {
-    id:1,
-    title: 'Citytrain Tee',
-    description: '',
-    price: 49.99,
-    images: [
-      'https://media.discordapp.net/attachments/856453890345533451/1107453392743313468/1.png',
-      'https://media.discordapp.net/attachments/856453890345533451/1107453393439559783/2.png',
-      'https://media.discordapp.net/attachments/856453890345533451/1107453394244861962/3.png'
-    ],
-    option_name:'Size',
-    options: [
-      {name:'small',available:true},
-      {name:'medium',available:true},
-      {name:'large',available:true},
-      {name:'xlarge',available:true},
-    ]
-  },
-  {
-    id:2,
-    title: 'Carriage Long Sleeve',
-    description: '',
-    price: 39.99,
-    images: [
-      'https://cityloop.cc/cdn/shop/files/1_8fa95593-3f59-4d9b-9e26-2e1c9045c7de.png',
-      'https://cityloop.cc/cdn/shop/files/2_8c6af036-245b-4cac-a1aa-93150321e3f9.png'
-    ],
-    option_name:'Size',
-    options: [
-      {name:'small',available:true},
-      {name:'medium',available:true},
-      {name:'large',available:true},
-      {name:'xlarge',available:true},
-    ]
-  },
-  {
-    id:3,
-    title: 'Elizabeth St Deck',
-    description: '',
-    price: 99.99,
-    images: [
-      'https://cityloop.cc/cdn/shop/files/g25.png',
-      'https://cityloop.cc/cdn/shop/files/b5.png'
-    ],
-    option_name:'Size/Colour',
-    options: [
-      {name:'8.25 Grey',available:false},
-      {name:'8.25 Black',available:true},
-      {name:'8.5 Grey',available:true},
-      {name:'8.5 Black',available:true},
-    ]
-  },
-]
+mongoose.connect(process.env.ATLAS_URI);
+const connection = mongoose.connection;
+connection.once("open", () => {
+  console.log("DB connected.");
+});
 
-app.get("/api/catalog", (req, res) => {
-    res.json(products)
-})
+app.get("/api/catalog", async (req, res) => {
+  try {
+    const products = await Product.find();
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching products" });
+  }
+});
 
-app.get("/api/product/:id", (req, res) => {
-  const id = req.params.id;
-  const p = products.find(x => x.id == id);
-  res.json(p)
-})
+app.get("/api/product/:id", async (req, res) => {
+  try {
+    const product = await Product.findOne({ _id: req.params.id });
+    if (product) {
+      res.json(product);
+    } else {
+      res.status(404).json({ message: "Product not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching product" });
+  }
+});
 
+app.get('/api/image/:filename', async (req, res) => {
+  const { filename } = req.params;
+  const { width, height } = req.query;
+  const imagePath = path.join(__dirname, 'images', filename);
+
+  if (!fs.existsSync(imagePath)) {
+    res.status(404).send('Image not found');
+    return;
+  }
+
+  try {
+    let resizeOptions = {fit: 'inside',};
+
+    if (width) {resizeOptions.width = parseInt(width)};
+    if (height) {resizeOptions.height = parseInt(height)};
+
+    const fileExtension = path.extname(filename).toLowerCase();
+
+    let outputOptions;
+    let responseType;
+
+    if (fileExtension === '.png') {
+      outputOptions = { compressionLevel: 9 };
+      responseType = 'image/png';
+    } else {
+      outputOptions = { quality: 80 };
+      responseType = 'image/jpeg';
+    }
+
+    const resizedImage = await sharp(imagePath)
+      .resize(resizeOptions)
+      .toFormat(fileExtension === '.png' ? 'png' : 'jpeg', outputOptions)
+      .toBuffer();
+
+    res.type(responseType).send(resizedImage);
+  } catch (error) {
+    res.status(500).send('Error resizing image');
+  }
+});
+
+// app.get('*', (req, res) => {
+//   res.sendFile(path.resolve(__dirname, '../dist', 'index.html'));
+// });
 
 app.listen(1337, () => {console.log("server started on port 1337")})
