@@ -30,9 +30,11 @@ const ProductInfo = ({ product }) => {
             </label>
             ))}
         </div>
-
-        <button 
-        className="buy-button">Buy</button>
+        <form action={`/create-checkout-session/${product.id}`} method="POST">
+          <button className="buy-button" type="submit">
+            Checkout
+          </button>
+        </form>
     </div>
   );
 };

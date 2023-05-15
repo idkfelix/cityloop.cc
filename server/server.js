@@ -11,9 +11,9 @@ products = [
     description: '',
     price: 49.99,
     images: [
-      'https://cityloop.cc/cdn/shop/products/1.png',
-      'https://cityloop.cc/cdn/shop/products/2.png',
-      'https://cityloop.cc/cdn/shop/products/3.png'
+      'https://media.discordapp.net/attachments/856453890345533451/1107453392743313468/1.png',
+      'https://media.discordapp.net/attachments/856453890345533451/1107453393439559783/2.png',
+      'https://media.discordapp.net/attachments/856453890345533451/1107453394244861962/3.png'
     ],
     option_name:'Size',
     options: [
