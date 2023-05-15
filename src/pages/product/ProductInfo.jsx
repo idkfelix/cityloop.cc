@@ -4,12 +4,12 @@ const ProductInfo = ({ product }) => {
 
   const [selectedOption, setSelectedOption] = useState();
 
-  useEffect(() => {
-    if (product?.options) {
-      console.log('here');
-      setSelectedOption(product.options[0]?.name);
-    }
-  }, [product]);
+  // useEffect(() => {
+  //   if (product?.options) {
+  //     console.log('here');
+  //     setSelectedOption();
+  //   }
+  // }, [product]);
 
   return (
     <div className="product-info">
@@ -20,11 +20,14 @@ const ProductInfo = ({ product }) => {
         <div className="radio-container">
             {product.options?.map((option) => (
             <label key={option.name}
-            id={option.name === selectedOption ? 'selected-option' : ''}>
+            className={option.name === selectedOption ? 'selected-option' : ''}
+            id={option.quantity === 0 ? 'disabled' : ''}
+            >
                 <input
                 type="radio"
                 value={option.name}
                 onClick={(e) => setSelectedOption(e.target.value)}
+                disabled={option.quantity === 0}
                 />
                 {option.name}
             </label>

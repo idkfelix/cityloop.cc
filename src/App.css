@@ -171,14 +171,16 @@ h1 {
   width: 75px;
 }
 
+#disabled {
+  opacity: 0.5;
+}
+
 .radio-container label:hover {
   background-color: #ccc;
 }
 
-#selected-option {
-  background-color: black;
-  color: #F7F5E9;
-  border-color: #F7F5E9;
+.selected-option {
+  color: red;
 }
 
 .buy-button {
