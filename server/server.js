@@ -7,9 +7,9 @@ const fs = require('fs');
 const path = require('path');
 const app = express()
 const Product = require('./dbModels/product.js');
+const stripe = require('stripe')(process.env.STRIPE_KEY);
 
 app.use(cors())
-
 
 mongoose.connect(process.env.ATLAS_URI);
 const connection = mongoose.connection;
@@ -76,6 +76,21 @@ app.get('/api/image/:filename', async (req, res) => {
     res.type(responseType).send(resizedImage);
   } catch (error) {
     res.status(500).send('Error resizing image');
+  }
+});
+
+app.post("/api/checkout", async (req, res) => {
+  try {
+    const session = await stripe.checkout.sessions.create({
+      success_url: 'https://example.com/success',
+      line_items: [
+        // api stuff here
+      ],
+      mode: 'payment',
+    });
+    res.json(session);
+  } catch (error) {
+    res.status(500).json({message:"error creating checkout"});
   }
 });
 

@@ -19,22 +19,22 @@ const ProductInfo = ({ product }) => {
 
         <div className="radio-container">
             {product.options?.map((option) => (
-            <label key={option.name}
-            className={option.name === selectedOption ? 'selected-option' : ''}
-            id={option.quantity === 0 ? 'disabled' : ''}
-            >
+              <label key={option._id}
+              className={option._id === selectedOption ? 'selected-option' : ''}
+              id={option.quantity === 0 ? 'disabled' : ''}
+              >
                 <input
                 type="radio"
-                value={option.name}
+                value={option._id}
                 onClick={(e) => setSelectedOption(e.target.value)}
                 disabled={option.quantity === 0}
                 />
                 {option.name}
-            </label>
+              </label>
             ))}
         </div>
         <form action={`/create-checkout-session/${product.id}`} method="POST">
-          <button className="buy-button" type="submit">
+          <button className="buy-button" onClick={console.log(selectedOption)} type="submit">
             Checkout
           </button>
         </form>
