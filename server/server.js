@@ -10,6 +10,7 @@ const Product = require('./dbModels/product.js');
 
 app.use(cors())
 
+
 mongoose.connect(process.env.ATLAS_URI);
 const connection = mongoose.connection;
 connection.once("open", () => {
