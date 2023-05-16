@@ -8,12 +8,14 @@ import ComingSoon from './pages/comingSoon/ComingSoon';
 
 function App() {
 
+  const server = "http://localhost:1337"
+
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/catalog" element={<Catalog />} />
+      <Route path="/catalog" element={<Catalog server={server}/>} />
       <Route path="/stores" element={<ComingSoon />} />      
-      <Route path="/products/:id" element={<ProductPage />} />
+      <Route path="/products/:id" element={<ProductPage server={server}/>} />
     </Routes>
   );
 }

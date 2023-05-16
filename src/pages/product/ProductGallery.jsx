@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 
-function ProductGallery({product}) {
+function ProductGallery({product, server}) {
   const [selectedImage, setSelectedImage] = useState()
 
   const handleImageClick = (image) => {
@@ -13,16 +13,14 @@ function ProductGallery({product}) {
     }
   }, [product]);
 
-
-  
   return (
     <>
       <div className="product-gallery">
-        <img src={`${selectedImage}?width=600`} className="focused-image" />
+        <img src={`${server}${selectedImage}?width=600`} className="focused-image" />
         <div style={{ display: 'flex' }}>
           {product?.images?.map((image) => (
             <img 
-            src={`${image}?width=600`} 
+            src={`${server}${image}?width=600`} 
             className={`image-pick ${image === selectedImage ? 'selected-image' : ''}`} 
             onClick={() => handleImageClick(image)}
             />

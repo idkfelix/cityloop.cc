@@ -4,12 +4,12 @@ import logo from '../../assets/logo.png';
 import ProductGrid from './ProductGrid';
 import NavBar from '../../components/NavBar'
 
-function Catalog() {
+function Catalog({server}) {
   const [products, setProducts] = useState([])
 
   useEffect(() => {
     const loadProducts = async () => {
-      const res = await axios.get("http://10.0.0.25:1337/api/catalog");
+      const res = await axios.get(`${server}/api/catalog`);
       console.log(res);
       setProducts(res.data);
     }
@@ -23,7 +23,7 @@ function Catalog() {
             <a href="/"><img src={logo} alt="Cityloop Logo" className="logo-title"/></a>
             <NavBar/>
         </div>
-        <ProductGrid products={products}/>
+        <ProductGrid products={products} server={server}/>
     </body>
   );
 }
